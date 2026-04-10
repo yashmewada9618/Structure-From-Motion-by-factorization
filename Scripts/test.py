@@ -1,14 +1,16 @@
-import cv2
-import os
 import glob
+import os
+
+import cv2
 import numpy as np
 
 # Load the first image
-img_path = '/home/yash/Documents/Computer_VIsion/CV_OptionalProject/hotel/hotel/'
+# Set img_path to the directory containing the hotel .png frames
+img_path = os.path.join(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)), "hotel", "hotel")
 os.chdir(img_path)
 images = []
 for file in list(glob.glob("*.png")):
-    images.append(os.getcwd() + str('/') + file)
+    images.append(os.getcwd() + str("/") + file)
 images = sorted(images)
 img = cv2.imread(images[0], 0)
 
@@ -22,12 +24,12 @@ prev_pts = np.array([kp.pt for kp in keypoints], dtype=np.float32).reshape(-1, 1
 
 # Initialize the W matrix
 num_frames = 100
-W = np.zeros((num_frames*2, prev_pts.shape[0]))
+W = np.zeros((num_frames * 2, prev_pts.shape[0]))
 
 # Loop over the remaining frames and track the feature points
 for i in range(1, num_frames):
     # Load the current image
-    img_path = f'path/to/image/number/{i}'
+    img_path = f"path/to/image/number/{i}"
     img = cv2.imread(images[i], 0)
 
     # Track the feature points from the previous frame to the current frame
@@ -39,7 +41,7 @@ for i in range(1, num_frames):
         print("Failed to track feature point")
 
     # Add the current frame's feature points to the W matrix
-    W[2*i:2*i+2, :] = curr_pt.reshape(-1, 2).T
+    W[2 * i : 2 * i + 2, :] = curr_pt.reshape(-1, 2).T
 
 # Subtract the mean in each frame
 W -= np.mean(W, axis=1, keepdims=True)
